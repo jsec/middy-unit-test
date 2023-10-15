@@ -32,6 +32,7 @@
     "@middy/http-json-body-parser": "^4.6.5",
     "aws-cdk-lib": "2.101.0",
     "constructs": "^10.0.0",
+    "json-schema-to-ts": "^2.9.2",
     "source-map-support": "^0.5.21"
   }
 }

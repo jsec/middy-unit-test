@@ -1,15 +1,17 @@
 import { type APIGatewayProxyEvent, type Callback, type Context } from 'aws-lambda';
 
-import eventFixture from './data/proxy-request.json';
+import { type TestObject } from '../lib/types';
+import eventJson from './data/proxy-request.json';
 
 describe('testing handler', () => {
   it('doesnt force me to stupidly type the handler', async () => {
-    const fixture = eventFixture as APIGatewayProxyEvent;
-    const testBody = {
+    const testBody: TestObject = {
       message: 'Hello from Lambda!'
     };
+
+    const baseEvent = eventJson as APIGatewayProxyEvent;
     const testEvent = {
-      ...fixture,
+      ...baseEvent,
       body: JSON.stringify(testBody),
       multiValueQueryStringParameters: {},
       pathParameters: {},
@@ -23,6 +25,8 @@ describe('testing handler', () => {
     };
 
     const mod = await import('../lib/handler');
+    // FIXME: Add a default context, and see if we can
+    // remove the callback
     const result = await mod.handler(
       testEvent,
       {} as unknown as Context,
@@ -33,4 +37,3 @@ describe('testing handler', () => {
     expect(result.statusCode).toEqual(200);
   });
 });
-
