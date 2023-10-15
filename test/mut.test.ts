@@ -1,5 +1,6 @@
-import { type APIGatewayProxyEvent, type Callback, type Context } from 'aws-lambda';
+import { type APIGatewayProxyEvent, type Context } from 'aws-lambda';
 
+import { handler } from '../lib/handler';
 import { type TestObject } from '../lib/types';
 import eventJson from './data/proxy-request.json';
 
@@ -24,14 +25,11 @@ describe('testing handler', () => {
       }
     };
 
-    const mod = await import('../lib/handler');
-    // FIXME: Add a default context, and see if we can
-    // remove the callback
-    const result = await mod.handler(
-      testEvent,
-      {} as unknown as Context,
-      {} as unknown as Callback<void>
-    );
+    const context: Partial<Context> = {
+      awsRequestId: '1234'
+    };
+
+    const result = await handler(testEvent, context as Context);
 
     console.log('result: ', result);
     expect(result.statusCode).toEqual(200);
