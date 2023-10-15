@@ -1,17 +1,36 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as Mut from '../lib/mut-stack';
+import { type APIGatewayProxyEvent, type Callback, type Context } from 'aws-lambda';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/mut-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new Mut.MutStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+import eventFixture from './data/proxy-request.json';
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+describe('testing handler', () => {
+  it('doesnt force me to stupidly type the handler', async () => {
+    const fixture = eventFixture as APIGatewayProxyEvent;
+    const testBody = {
+      message: 'Hello from Lambda!'
+    };
+    const testEvent = {
+      ...fixture,
+      body: JSON.stringify(testBody),
+      multiValueQueryStringParameters: {},
+      pathParameters: {},
+      queryStringParameters: {},
+      rawHeaders: {
+        'Content-Type': 'application/json'
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const mod = await import('../lib/handler');
+    const result = await mod.handler(
+      testEvent,
+      {} as unknown as Context,
+      {} as unknown as Callback<void>
+    );
+
+    console.log('result: ', result);
+    expect(result.statusCode).toEqual(200);
+  });
 });
+

@@ -1,16 +1,16 @@
+/* eslint-disable no-new */
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import type { Construct } from 'constructs';
 
 export class MutStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'MutQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    new NodejsFunction(this, 'TestFunction', {
+      architecture: Architecture.ARM_64,
+      runtime: Runtime.NODEJS_18_X
+    });
   }
 }
